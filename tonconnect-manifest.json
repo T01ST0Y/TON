@@ -1,7 +1,5 @@
 {
-"url": "<app-url>", 
-"name": "<app-name>",
-"iconUrl": "<app-icon-url>",
-"termsofuseUrl": "<terms-of-use-url>",
-"privacyPolicyUrl": "<privacy-policy-url>"
+"url": "https://t01st0y.github.io/TON/ton.html", 
+"name": "TON Test",
+"iconUrl": "https://ton-connect.github.io/demo-dapp/apple-touch-icon.png"
 }
