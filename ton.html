@@ -21,10 +21,13 @@
 </head>
 
 <body>
-    <div></div>
- <script>
-    const tonConnectUI = new TON_CONNECT_UI.TonConnectUI
-    </script>
+    <div id="connect"></div>
+<script>
+    const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+        manifestUrl: 'https://https://t01st0y.github.io/TON/tonconnect-manifest.json',
+        buttonRootId: 'connect'
+    });
+</script>
 </body>
 
 </html>
