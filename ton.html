@@ -8,6 +8,7 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
@@ -22,28 +23,61 @@
 
 <body>
     <div id="connect"></div>
-    <button onclick='transaction()'>Send TON</button>
+    <div id="wallet-balance" style="color: white; margin-top: 20px;">
+        Баланс: <span id="balance"></span>
+    </div>
+    <button id="show-balance-button" style="margin-top: 20px; display: none;">Показать баланс</button>
+    <button onclick='transaction()' style="margin-top: 20px;">Send TON</button>
 <script>
     const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
         manifestUrl: 'https://t01st0y.github.io/TON/tonconnect-manifest.json',
         buttonRootId: 'connect'
     });
 
-    
+    tonConnectUI.onStatusChange((status) => {
+        if (status === 'connected') {
+            document.getElementById('show-balance-button').style.display = 'block';
+        } else {
+            document.getElementById('show-balance-button').style.display = 'none';
+        }
+    });
+
+    document.getElementById('show-balance-button').addEventListener('click', async () => {
+        const wallet = tonConnectUI.wallet;
+        if (!wallet) {
+            console.error('Кошелек не подключен');
+            return;
+        }
+
+        const address = wallet.account.address;
+        try {
+            const response = await fetch(`https://toncenter.com/api/v2/getAddressBalance?address=${address}`);
+            const data = await response.json();
+            
+            if (data.ok) {
+                const balance = data.result;
+                document.getElementById('balance').innerText = balance;
+                console.log('Баланс:', balance);
+            } else {
+                console.error('Ошибка при получении баланса:', data.error);
+            }
+        } catch (error) {
+            console.error('Ошибка при запросе баланса:', error);
+        }
+    });
 
     async function transaction() {
-const transaction = {
-    messages: [
-        {
-            address: "0:2489f448183a6705fb46b6f3224370631fd3e8f95739b744afb1a039f6e74890", // destination address
-            amount: "1000000" //Toncoin in nanotons
-        }
-    ]
-}
+        const transaction = {
+            messages: [
+                {
+                    address: "0:2489f448183a6705fb46b6f3224370631fd3e8f95739b744afb1a039f6e74890", // destination address
+                    amount: "1000000" //Toncoin in nanotons
+                }
+            ]
+        };
 
-const result = await tonConnectUI.sendTransaction(transaction)
-}
-    
+        const result = await tonConnectUI.sendTransaction(transaction);
+    }
 </script>
 </body>
 
